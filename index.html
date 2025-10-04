@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Funil de Tráfego Orgânico</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Estilo base para a fonte Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Efeito de hover sutil para os cards */
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Estilos para o modal */
+        .modal-backdrop {
+            background-color: rgba(0,0,0,0.7);
+        }
+        /* Estilos para o carrossel do calendário */
+        #calendar-carousel::-webkit-scrollbar { height: 8px; }
+        #calendar-carousel::-webkit-scrollbar-track { background: #2d3748; border-radius: 10px; }
+        #calendar-carousel::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
+        #calendar-carousel::-webkit-scrollbar-thumb:hover { background: #718096; }
+        .period-btn-active { background-color: #0891b2; color: white; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Container da View Principal (Dashboard) -->
+    <div id="dashboard-view">
+        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <header class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-white tracking-tight">Dashboard de Conteúdo e Funil</h1>
+                <p class="mt-2 text-lg text-cyan-400">Organize sua estratégia de tráfego orgânico e métricas.</p>
+            </header>
+
+            <main class="space-y-12">
+                 <!-- 1. Seção: Padronização de Tipos de Posts -->
+                 <section id="tipos-de-post">
+                    <h2 class="text-3xl font-bold text-white mb-6 border-l-4 border-cyan-500 pl-4">1. Padronização de Posts</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 transition-all duration-300 card-hover"><h3 class="text-xl font-semibold text-cyan-400">Testes Diários (Stories)</h3><p class="mt-2 text-gray-400">Fotos ou vídeos com duração de 24 horas. Ideal para interações rápidas e testes de conteúdo.</p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 transition-all duration-300 card-hover"><h3 class="text-xl font-semibold text-cyan-400">Cortes (Reels, TikTok)</h3><p class="mt-2 text-gray-400">Vídeos de 15s a 60s. Alto potencial de viralização e alcance de novas audiências.</p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 transition-all duration-300 card-hover"><h3 class="text-xl font-semibold text-cyan-400">Curtas</h3><p class="mt-2 text-gray-400">Vídeos de 1min a 30min. Para aprofundar em temas e gerar mais conexão.</p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 transition-all duration-300 card-hover"><h3 class="text-xl font-semibold text-cyan-400">Apresentações (Carrosséis)</h3><p class="mt-2 text-gray-400">Montagens e designs gráficos. Ótimo para conteúdo educacional e passo-a-passo.</p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 transition-all duration-300 card-hover"><h3 class="text-xl font-semibold text-cyan-400">Longas</h3><p class="mt-2 text-gray-400">Vídeos com mais de 30min (YouTube, Séries). Para conteúdo denso e construção de autoridade.</p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 transition-all duration-300 card-hover"><h3 class="text-xl font-semibold text-cyan-400">Provas Sociais (Feed)</h3><p class="mt-2 text-gray-400">Fotos e documentos que validam seu trabalho. Essencial para gerar confiança.</p></div>
+                    </div>
+                </section>
+
+                <!-- 2. Seção: Estrutura do Funil -->
+                <section id="funil">
+                    <h2 class="text-3xl font-bold text-white mb-6 border-l-4 border-cyan-500 pl-4">2. Estrutura do Funil</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700"><h3 class="text-xl font-semibold text-cyan-400 mb-3">Marketing (Atração)</h3><ul class="space-y-2 text-gray-300"><li>Instagram</li><li>Facebook</li><li>TikTok</li><li>YouTube</li><li>Twitch</li><li>Netflix (Branded Content)</li></ul></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700"><h3 class="text-xl font-semibold text-cyan-400 mb-3">Relacionamento</h3><ul class="space-y-2 text-gray-300"><li>WhatsApp</li><li>Telegram</li><li>Discord</li><li>Hotmart</li><li>Sparkle</li></ul></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700"><h3 class="text-xl font-semibold text-cyan-400 mb-3">Vendas B2C</h3><ul class="space-y-2 text-gray-300"><li>Site Próprio</li><li>Landing Page</li><li>Marketplaces</li><li>WhatsApp Business</li></ul></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700"><h3 class="text-xl font-semibold text-cyan-400 mb-3">Negócios B2B</h3><ul class="space-y-2 text-gray-300"><li>Google Workspace</li><li>LinkedIn</li></ul></div>
+                    </div>
+                </section>
+
+                <!-- 3. Seção: Métricas Relevantes (Calculadora) -->
+                <section id="metricas">
+                    <h2 class="text-3xl font-bold text-white mb-6 border-l-4 border-cyan-500 pl-4">3. Calculadora de Métricas</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Calculadoras -->
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 space-y-3"><h3 class="text-xl font-semibold text-cyan-400">Stories</h3><input type="number" id="stories-views" placeholder="Visualizações" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><input type="number" id="stories-interacoes" placeholder="Directs + Interações" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><button onclick="calcularStories()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md transition-colors">Calcular</button><p class="text-center text-lg mt-2">Score: <span id="stories-resultado" class="font-bold text-white">0</span></p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 space-y-3"><h3 class="text-xl font-semibold text-cyan-400">Reels</h3><input type="number" id="reels-views" placeholder="Visualizações" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><input type="number" id="reels-compartilhamentos" placeholder="Compartilhamentos" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><button onclick="calcularReels()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md transition-colors">Calcular</button><p class="text-center text-lg mt-2">Score: <span id="reels-resultado" class="font-bold text-white">0</span></p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 space-y-3"><h3 class="text-xl font-semibold text-cyan-400">Fotos no Feed</h3><input type="number" id="feed-views" placeholder="Visualizações" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><input type="number" id="feed-interacoes" placeholder="Curtidas + Comentários" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><button onclick="calcularFeed()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md transition-colors">Calcular</button><p class="text-center text-lg mt-2">Score: <span id="feed-resultado" class="font-bold text-white">0</span></p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 space-y-3"><h3 class="text-xl font-semibold text-cyan-400">Carrossel</h3><input type="number" id="carrossel-views" placeholder="Visualizações" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><input type="number" id="carrossel-salvamentos" placeholder="Salvamentos" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><button onclick="calcularCarrossel()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md transition-colors">Calcular</button><p class="text-center text-lg mt-2">Score: <span id="carrossel-resultado" class="font-bold text-white">0</span></p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 space-y-3"><h3 class="text-xl font-semibold text-cyan-400">Longa Metragem</h3><input type="number" id="longa-tempo-medio" placeholder="Tempo médio assistido (seg)" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><input type="number" id="longa-duracao" placeholder="Duração do vídeo (seg)" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><button onclick="calcularLonga()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md transition-colors">Calcular</button><p class="text-center text-lg mt-2">Score: <span id="longa-resultado" class="font-bold text-white">0</span></p></div>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 space-y-3"><h3 class="text-xl font-semibold text-cyan-400">Curta Metragem</h3><input type="number" id="curta-tempo-total" placeholder="Tempo total assistido (seg)" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><input type="number" id="curta-duracao" placeholder="Duração do vídeo (seg)" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"><button onclick="calcularCurta()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md transition-colors">Calcular</button><p class="text-center text-lg mt-2">Score: <span id="curta-resultado" class="font-bold text-white">0</span></p></div>
+                    </div>
+                </section>
+                
+                <!-- 4. Seção: Calendário de Conteúdo -->
+                <section id="calendario">
+                    <h2 class="text-3xl font-bold text-white mb-6 border-l-4 border-cyan-500 pl-4">4. Calendário de Conteúdo</h2>
+                    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                        <div class="flex justify-between items-center mb-4">
+                            <button id="prev-month" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors">&lt;</button>
+                            <h3 id="month-year" class="text-xl font-semibold text-white"></h3>
+                            <button id="next-month" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors">&gt;</button>
+                        </div>
+                        <div id="calendar-carousel" class="flex overflow-x-auto space-x-4 pb-4">
+                            <!-- Day cards serão gerados aqui -->
+                        </div>
+                    </div>
+                </section>
+            </main>
+            
+            <footer class="text-center mt-12 py-6 border-t border-gray-700">
+                <p class="text-gray-500">Desenvolvido para organização de conteúdo digital.</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Container da View do Dia (Imersiva) -->
+    <div id="day-view" class="hidden min-h-screen flex-col p-4 sm:p-6 lg:p-8">
+        <header class="flex items-center justify-between mb-6">
+            <button id="back-to-dashboard" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Voltar ao Dashboard
+            </button>
+            <h2 id="day-view-date" class="text-2xl sm:text-3xl font-bold text-white text-center"></h2>
+            <div class="w-32"></div> <!-- Espaçador -->
+        </header>
+
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 flex-grow flex flex-col">
+            <!-- Linha do Tempo de Horários -->
+            <div id="day-view-timeline" class="space-y-4 flex-grow overflow-y-auto pr-2">
+                <!-- Horários filtrados serão gerados aqui -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Configuração de Período -->
+    <div id="period-config-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
+        <div class="modal-backdrop fixed inset-0" onclick="closePeriodConfigModal()"></div>
+        <div class="bg-gray-800 rounded-lg shadow-xl w-11/12 md:w-1/2 lg:w-1/3 max-w-lg mx-auto p-6 relative">
+            <h3 id="period-config-title" class="text-2xl font-bold text-white mb-4">Configurar Período</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-300">1. Escolha o turno:</label>
+                    <div class="flex justify-center rounded-md bg-gray-700 p-1" role="group">
+                        <button id="config-period-am" class="px-5 py-2 text-sm font-medium rounded-md flex-1 transition-colors">Manhã</button>
+                        <button id="config-period-pm" class="px-5 py-2 text-sm font-medium rounded-md flex-1 transition-colors">Tarde/Noite</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-300">2. Escolha de 1 a 3 blocos de horário:</label>
+                    <div id="config-time-blocks" class="grid grid-cols-3 gap-2">
+                        <!-- Botões de blocos de horário serão inseridos aqui -->
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closePeriodConfigModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Cancelar</button>
+                    <button type="button" id="confirm-period-btn" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors opacity-50 cursor-not-allowed" disabled>Planejar Período</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Criação/Edição de Post -->
+    <div id="post-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
+        <div class="modal-backdrop fixed inset-0" onclick="closePostModal()"></div>
+        <div class="bg-gray-800 rounded-lg shadow-xl w-11/12 md:w-1/2 lg:w-1/3 max-w-lg mx-auto p-6 relative">
+            <h3 id="post-modal-title" class="text-2xl font-bold text-white mb-4"></h3>
+            <form id="post-form" class="space-y-4">
+                 <input type="hidden" id="post-id">
+                 <div>
+                    <label for="post-type" class="block mb-2 text-sm font-medium text-gray-300">Tipo de Post</label>
+                    <select id="post-type" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" required>
+                        <option value="stories">Stories</option>
+                        <option value="cortes">Cortes (Reels, TikTok)</option>
+                        <option value="curtas">Curtas</option>
+                        <option value="apresentacoes">Apresentações (Carrossel)</option>
+                        <option value="longas">Longas</option>
+                        <option value="provas">Provas Sociais</option>
+                    </select>
+                 </div>
+                 <div><label for="post-tema" class="block mb-2 text-sm font-medium text-gray-300">Tema</label><input type="text" id="post-tema" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" required></div>
+                 <div><label for="post-titulo" class="block mb-2 text-sm font-medium text-gray-300">Título</label><input type="text" id="post-titulo" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" required></div>
+                 <div><label for="post-roteiro" class="block mb-2 text-sm font-medium text-gray-300">Roteiro</label><textarea id="post-roteiro" rows="4" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></textarea></div>
+                 <div><label for="post-capa" class="block mb-2 text-sm font-medium text-gray-300">URL da Capa (Imagem)</label><input type="url" id="post-capa" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></div>
+                 <div class="flex justify-end space-x-3 pt-2">
+                     <button type="button" onclick="handleDelete()" id="delete-post-btn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all duration-300">Excluir</button>
+                     <button type="button" onclick="closePostModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Cancelar</button>
+                     <button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors">Salvar</button>
+                 </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- JavaScript para as calculadoras e calendário -->
+    <script>
+        // --- Lógica das Calculadoras ---
+        function getValueAsFloat(id) { return parseFloat(document.getElementById(id).value) || 0; }
+        function calcularStories() { document.getElementById('stories-resultado').textContent = (getValueAsFloat('stories-views') * getValueAsFloat('stories-interacoes')).toLocaleString('pt-BR'); }
+        function calcularReels() { document.getElementById('reels-resultado').textContent = (getValueAsFloat('reels-views') * getValueAsFloat('reels-compartilhamentos')).toLocaleString('pt-BR'); }
+        function calcularFeed() { document.getElementById('feed-resultado').textContent = (getValueAsFloat('feed-views') * getValueAsFloat('feed-interacoes')).toLocaleString('pt-BR'); }
+        function calcularCarrossel() { document.getElementById('carrossel-resultado').textContent = (getValueAsFloat('carrossel-views') * getValueAsFloat('carrossel-salvamentos')).toLocaleString('pt-BR'); }
+        function calcularLonga() { document.getElementById('longa-resultado').textContent = (getValueAsFloat('longa-tempo-medio') * getValueAsFloat('longa-duracao')).toLocaleString('pt-BR'); }
+        function calcularCurta() { document.getElementById('curta-resultado').textContent = (getValueAsFloat('curta-tempo-total') * getValueAsFloat('curta-duracao')).toLocaleString('pt-BR'); }
+        
+        // --- Lógica do Calendário e Views ---
+        const dashboardView = document.getElementById('dashboard-view');
+        const dayView = document.getElementById('day-view');
+        const monthYearEl = document.getElementById('month-year');
+        const calendarCarouselEl = document.getElementById('calendar-carousel');
+        const prevMonthBtn = document.getElementById('prev-month');
+        const nextMonthBtn = document.getElementById('next-month');
+        const postModal = document.getElementById('post-modal');
+        const periodConfigModal = document.getElementById('period-config-modal');
+        const postForm = document.getElementById('post-form');
+        const backToDashboardBtn = document.getElementById('back-to-dashboard');
+
+        let currentDate = new Date();
+        let postsData = JSON.parse(localStorage.getItem('calendarPosts')) || {};
+        let currentDayViewDate = null;
+        let configSelectedPeriod = 'am';
+        let configSelectedBlocks = [];
+        let activeDayViewPeriod = 'am';
+        let activeDayViewBlocks = [];
+        let isConfirmingDelete = false;
+
+        const POST_VISUALS = {
+            stories: { icon: 'fa-square', color: 'bg-green-500', textColor: 'text-green-400', shape: 'w-6 h-6' }, // Verde
+            cortes: { icon: 'fa-rectangle-vertical', color: 'bg-pink-500', textColor: 'text-pink-400', shape: 'w-4 h-8' },
+            curtas: { icon: 'custom-curtas', color: 'bg-pink-500', textColor: 'text-pink-400', shape: '' }, // Híbrido
+            apresentacoes: { icon: 'fa-clone', color: 'bg-yellow-500', textColor: 'text-yellow-400', shape: 'w-6 h-6' }, // Amarelo
+            longas: { icon: 'fa-rectangle-horizontal', color: 'bg-red-500', textColor: 'text-red-400', shape: 'w-10 h-5' },
+            provas: { icon: 'fa-circle', color: 'bg-cyan-500', textColor: 'text-cyan-400', shape: 'w-6 h-6' } // Ciano para diferenciar
+        };
+
+        function savePosts() { localStorage.setItem('calendarPosts', JSON.stringify(postsData)); }
+
+        function renderCalendar() {
+            calendarCarouselEl.innerHTML = '';
+            const month = currentDate.getMonth();
+            const year = currentDate.getFullYear();
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            monthYearEl.textContent = `${monthNames[month]} de ${year}`;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                const dayPostCounts = Object.keys(postsData)
+                    .filter(key => key.startsWith(dateStr))
+                    .reduce((acc, key) => {
+                        const post = postsData[key];
+                        if (post && post.type) {
+                            acc[post.type] = (acc[post.type] || 0) + 1;
+                        }
+                        return acc;
+                    }, {});
+
+                let iconsHtml = '<div class="grid grid-cols-2 gap-x-2 gap-y-2 mt-2 w-full px-2">';
+                const postTypeOrder = ['stories', 'cortes', 'curtas', 'apresentacoes', 'longas', 'provas'];
+
+                postTypeOrder.forEach(type => {
+                    const count = dayPostCounts[type] || 0;
+                    const hasPosts = count > 0;
+                    const visual = POST_VISUALS[type];
+                    let iconContent = '';
+
+                    if (type === 'curtas') {
+                        const pinkColor = hasPosts ? 'bg-pink-500' : 'bg-gray-600';
+                        const redColor = hasPosts ? 'bg-red-500' : 'bg-gray-500';
+                        iconContent = `
+                            <div class="relative w-5 h-6 fa-fw flex items-center justify-center">
+                                <div class="absolute w-3 h-5 ${pinkColor} rounded-sm"></div>
+                                <div class="absolute bottom-0 w-4 h-2 ${redColor} rounded-sm"></div>
+                            </div>
+                        `;
+                    } else {
+                        const iconColor = hasPosts ? visual.textColor : 'text-gray-500';
+                        iconContent = `<i class="fas ${visual.icon} fa-fw ${iconColor} text-xl"></i>`;
+                    }
+                    
+                    const countColor = hasPosts ? 'text-gray-100' : 'text-gray-500';
+                    
+                    iconsHtml += `
+                        <div class="flex items-center">
+                            ${iconContent}
+                            <span class="ml-1.5 font-bold text-sm ${countColor}">${count}</span>
+                        </div>
+                    `;
+                });
+                iconsHtml += '</div>';
+
+
+                const dayEl = document.createElement('div');
+                dayEl.className = 'flex-shrink-0 w-36 h-48 flex flex-col justify-start items-center p-2 rounded-lg bg-gray-700 cursor-pointer transition-all duration-300 hover:bg-cyan-700 hover:shadow-lg';
+                dayEl.innerHTML = `
+                    <div class="text-center mb-1">
+                        <span class="font-semibold text-gray-400 text-sm">${dayNames[date.getDay()]}</span>
+                        <span class="block text-4xl font-bold text-white">${day}</span>
+                    </div>
+                    <div class="flex-grow w-full flex items-center">${iconsHtml}</div>
+                `;
+                dayEl.dataset.date = dateStr;
+                dayEl.onclick = () => openPeriodConfigModal(dateStr);
+                
+                const today = new Date();
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    dayEl.classList.add('border-2', 'border-cyan-500', 'bg-gray-600');
+                    dayEl.classList.remove('bg-gray-700');
+                }
+                calendarCarouselEl.appendChild(dayEl);
+            }
+        }
+        
+        function openPeriodConfigModal(dateStr) {
+            currentDayViewDate = dateStr;
+            configSelectedPeriod = 'am';
+            configSelectedBlocks = [];
+            renderPeriodConfigModalContent();
+            periodConfigModal.style.display = 'flex';
+        }
+
+        function closePeriodConfigModal() {
+            periodConfigModal.style.display = 'none';
+        }
+
+        function renderPeriodConfigModalContent() {
+            const periodAmBtn = document.getElementById('config-period-am');
+            const periodPmBtn = document.getElementById('config-period-pm');
+            const blocksContainer = document.getElementById('config-time-blocks');
+            const confirmBtn = document.getElementById('confirm-period-btn');
+            
+            periodAmBtn.classList.toggle('period-btn-active', configSelectedPeriod === 'am');
+            periodPmBtn.classList.toggle('period-btn-active', configSelectedPeriod === 'pm');
+
+            const blocks = {
+                am: ["00:00 - 03:59", "04:00 - 07:59", "08:00 - 11:59"],
+                pm: ["12:00 - 15:59", "16:00 - 19:59", "20:00 - 23:59"]
+            };
+
+            blocksContainer.innerHTML = '';
+            blocks[configSelectedPeriod].forEach((blockText, index) => {
+                const blockBtn = document.createElement('button');
+                blockBtn.textContent = blockText;
+                blockBtn.className = 'px-3 py-2 text-sm font-medium rounded-md transition-colors';
+                
+                if(configSelectedBlocks.includes(index)) {
+                    blockBtn.classList.add('period-btn-active');
+                } else {
+                    blockBtn.classList.add('border', 'border-gray-600', 'hover:bg-gray-700');
+                }
+                
+                blockBtn.onclick = () => {
+                    const selectedIndex = configSelectedBlocks.indexOf(index);
+                    if (selectedIndex > -1) {
+                        configSelectedBlocks.splice(selectedIndex, 1);
+                    } else {
+                        if (configSelectedBlocks.length < 3) {
+                            configSelectedBlocks.push(index);
+                        }
+                    }
+                    renderPeriodConfigModalContent();
+                };
+                blocksContainer.appendChild(blockBtn);
+            });
+
+            if (configSelectedBlocks.length > 0) {
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                confirmBtn.disabled = true;
+                confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        document.getElementById('config-period-am').onclick = () => { configSelectedPeriod = 'am'; configSelectedBlocks = []; renderPeriodConfigModalContent(); };
+        document.getElementById('config-period-pm').onclick = () => { configSelectedPeriod = 'pm'; configSelectedBlocks = []; renderPeriodConfigModalContent(); };
+        document.getElementById('confirm-period-btn').onclick = () => {
+            if (configSelectedBlocks.length > 0) {
+                closePeriodConfigModal();
+                showDayView(currentDayViewDate, configSelectedPeriod, configSelectedBlocks);
+            }
+        };
+
+        function showDayView(dateStr, period, blocks) {
+            activeDayViewPeriod = period;
+            activeDayViewBlocks = blocks;
+            dashboardView.classList.add('hidden');
+            dayView.classList.remove('hidden');
+            dayView.classList.add('flex');
+            document.getElementById('day-view-date').textContent = new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+            renderDayTimeline(period, blocks);
+        }
+
+        function showDashboardView() {
+            dayView.classList.add('hidden');
+            dayView.classList.remove('flex');
+            dashboardView.classList.remove('hidden');
+            renderCalendar();
+        }
+        
+        function renderDayTimeline(period, blocks) {
+            const timelineEl = document.getElementById('day-view-timeline');
+            timelineEl.innerHTML = '';
+            blocks.sort((a, b) => a - b);
+
+            const blockLabels = {
+                am: ["00:00 - 03:59", "04:00 - 07:59", "08:00 - 11:59"],
+                pm: ["12:00 - 15:59", "16:00 - 19:59", "20:00 - 23:59"]
+            };
+
+            blocks.forEach(block => {
+                const header = document.createElement('h4');
+                header.className = 'text-lg font-semibold text-cyan-400 pt-4 pb-2 border-t border-gray-700 first:border-t-0 first:pt-0';
+                header.textContent = `Bloco: ${blockLabels[period][block]}`;
+                timelineEl.appendChild(header);
+
+                const startHour = period === 'am' ? block * 4 : 12 + block * 4;
+                
+                for (let i = 0; i < 4; i++) {
+                    const hour = startHour + i;
+                    const hourStr = String(hour).padStart(2, '0');
+
+                    const hourRowEl = document.createElement('div');
+                    hourRowEl.className = 'flex items-start';
+                    
+                    const hourLabelEl = document.createElement('div');
+                    hourLabelEl.className = 'font-bold w-12 text-gray-400 pt-2 text-sm';
+                    hourLabelEl.textContent = `${hourStr}:00`;
+                    
+                    const slotsContainerEl = document.createElement('div');
+                    slotsContainerEl.className = 'flex-grow grid grid-cols-3 sm:grid-cols-6 gap-1 ml-4';
+
+                    for (let j = 0; j < 6; j++) {
+                        const minute = j * 10;
+                        const minuteStr = String(minute).padStart(2, '0');
+                        const postId = `${currentDayViewDate}-${hourStr}-${minuteStr}`;
+                        const post = postsData[postId];
+                        
+                        const slotEl = document.createElement('div');
+                        slotEl.className = 'h-10 rounded-md flex items-center justify-center cursor-pointer transition-colors';
+                        slotEl.onclick = () => openPostModal(currentDayViewDate, hour, minute);
+
+                        if (post) {
+                            slotEl.innerHTML = createPostVisual(post, true);
+                            slotEl.title = post.titulo;
+                        } else {
+                            slotEl.className += ' bg-gray-700 hover:bg-gray-600';
+                            slotEl.innerHTML = `<i class="fa-solid fa-plus text-gray-500"></i>`;
+                        }
+                        slotsContainerEl.appendChild(slotEl);
+                    }
+                    
+                    hourRowEl.appendChild(hourLabelEl);
+                    hourRowEl.appendChild(slotsContainerEl);
+                    timelineEl.appendChild(hourRowEl);
+                }
+            });
+        }
+
+        function createPostVisual(post, isCompact = false) {
+            const v = POST_VISUALS[post.type] || { icon: 'fa-question-circle', color: 'bg-gray-400', shape: 'w-6 h-6' };
+            let shapeEl = `<div class="flex items-center justify-center text-white ${v.shape} ${v.color} rounded-sm"><i class="fas ${v.icon} text-xs"></i></div>`;
+             if (post.type === 'apresentacoes') {
+                 shapeEl = `<div class="relative w-6 h-6"><div class="absolute top-1 left-1 w-5 h-5 ${v.color} rounded-sm opacity-70"></div><div class="absolute top-0 left-0 w-5 h-5 ${v.color} rounded-sm flex items-center justify-center text-white"><i class="fas ${v.icon} text-xs"></i></div></div>`;
+             }
+            
+            if (isCompact) {
+                return shapeEl;
+            }
+            return `<div class="flex items-center gap-3">${shapeEl} <span class="text-white truncate">${post.titulo}</span></div>`;
+        }
+        
+        function openPostModal(dateStr, hour, minute) {
+            const hourStr = String(hour).padStart(2, '0');
+            const minuteStr = String(minute).padStart(2, '0');
+            const postId = `${dateStr}-${hourStr}-${minuteStr}`;
+            
+            document.getElementById('post-modal-title').textContent = `Agendar Post para ${new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR')} às ${hourStr}:${minuteStr}`;
+            document.getElementById('post-id').value = postId;
+            
+            const post = postsData[postId];
+            const deleteBtn = document.getElementById('delete-post-btn');
+            postForm.reset();
+            deleteBtn.style.display = 'none';
+            
+            if (post) {
+                document.getElementById('post-type').value = post.type || 'stories';
+                document.getElementById('post-tema').value = post.tema || '';
+                document.getElementById('post-titulo').value = post.titulo || '';
+                document.getElementById('post-roteiro').value = post.roteiro || '';
+                document.getElementById('post-capa').value = post.capa || '';
+                deleteBtn.style.display = 'inline-flex';
+            }
+
+            postModal.style.display = 'flex';
+        }
+
+        function closePostModal() {
+            postModal.style.display = 'none';
+            resetDeleteButton();
+        }
+
+        function resetDeleteButton() {
+            const deleteBtn = document.getElementById('delete-post-btn');
+            isConfirmingDelete = false;
+            deleteBtn.textContent = 'Excluir';
+            deleteBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+            deleteBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+        }
+
+        function handleDelete() {
+            const deleteBtn = document.getElementById('delete-post-btn');
+            if (!isConfirmingDelete) {
+                isConfirmingDelete = true;
+                deleteBtn.textContent = 'Confirmar Exclusão?';
+                deleteBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                deleteBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+                setTimeout(resetDeleteButton, 3000);
+            } else {
+                const postId = document.getElementById('post-id').value;
+                delete postsData[postId];
+                savePosts();
+                closePostModal();
+                showDayView(currentDayViewDate, activeDayViewPeriod, activeDayViewBlocks);
+            }
+        }
+
+        postForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const postId = document.getElementById('post-id').value;
+            postsData[postId] = {
+                type: document.getElementById('post-type').value,
+                tema: document.getElementById('post-tema').value,
+                titulo: document.getElementById('post-titulo').value,
+                roteiro: document.getElementById('post-roteiro').value,
+                capa: document.getElementById('post-capa').value
+            };
+            savePosts();
+            closePostModal();
+            showDayView(currentDayViewDate, activeDayViewPeriod, activeDayViewBlocks);
+        });
+
+        prevMonthBtn.onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); };
+        nextMonthBtn.onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); };
+        backToDashboardBtn.onclick = showDashboardView;
+        
+        window.onclick = function(event) { 
+            if (event.target.classList.contains('modal-backdrop')) { 
+                closePostModal(); 
+                closePeriodConfigModal();
+            } 
+        }
+
+        // Renderização inicial
+        renderCalendar();
+    </script>
+</body>
+</html>
+
+
