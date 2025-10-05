@@ -655,27 +655,129 @@
         }
 
         function renderAnalyticsBlock(post) {
-            const block = document.getElementById('analytics-block'); let content;
+            const block = document.getElementById('analytics-block');
+            let content;
             if (post.status !== 'distribuido') {
                 content = `<div class="text-center text-gray-500 flex flex-col items-center justify-center h-full"><i class="fas fa-chart-line fa-3x mb-4"></i><p>Disponível após a distribuição.</p></div>`;
-                block.innerHTML = `<h3 class="text-2xl font-bold text-white mb-4">3. Analytics</h3>${content}`; return;
+                block.innerHTML = `<h3 class="text-2xl font-bold text-white mb-4">3. Analytics</h3>${content}`;
+                return;
             }
+            
             const analytics = post.analytics || {};
-            const calculators = { stories: { p1: 'Visualizações', p2: 'Directs + Interações' }, reels: { p1: 'Visualizações', p2: 'Compartilhamentos' }, cortes: { p1: 'Visualizações', p2: 'Compartilhamentos' }, provas: { p1: 'Visualizações', p2: 'Curtidas + Comentários' }, apresentacoes: { p1: 'Visualizações', p2: 'Salvamentos' }, longas: { p1: 'Tempo médio (seg)', p2: 'Duração (seg)' }, curtas: { p1: 'Tempo total (seg)', p2: 'Duração (seg)' } };
-            const calc = calculators[post.type] || { p1: 'Views', p2: 'Métrica' };
-            const views = analytics.input1 || 0, metric = analytics.input2 || 0;
-            const engagement = views > 0 ? (metric / views) * 100 : 0;
-            content = `<div class="space-y-3"><input type="number" id="post-analytics-input1" placeholder="${calc.p1}" value="${analytics.input1 || ''}" class="w-full bg-gray-700 p-2 rounded-md border border-gray-600"><input type="number" id="post-analytics-input2" placeholder="${calc.p2}" value="${analytics.input2 || ''}" class="w-full bg-gray-700 p-2 rounded-md border border-gray-600"><button onclick="calculatePostAnalytics('${currentPostId}')" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md">Calcular & Salvar</button><p class="text-center text-lg mt-2">Engajamento: <span id="post-analytics-result" class="font-bold text-white">${engagement.toFixed(2)}%</span></p></div>`;
+            const calculators = {
+                stories: { label: 'Taxa de Engajamento', p1: 'Visualizações', p2: 'Respostas + Interações' },
+                cortes: { label: 'Taxa de Compartilhamento', p1: 'Visualizações', p2: 'Compartilhamentos' },
+                curtas: { label: 'Taxa de Retenção', p1: 'Retenção (%)' },
+                apresentacoes: { label: 'Taxa de Autoridade', p1: 'Visualizações', p2: 'Salvamentos' },
+                longas: { label: 'Taxa de Retenção', p1: 'Retenção (%)' },
+                provas: { label: 'Taxa de Relevância', p1: 'Visualizações', p2: 'Curtidas + Comentários' }
+            };
+            const calc = calculators[post.type] || { label: 'Engajamento', p1: 'Visualizações', p2: 'Métrica' };
+            
+            let engagement = 0;
+            if (post.type === 'longas' || post.type === 'curtas') {
+                engagement = analytics.input1 || 0;
+            } else {
+                const views = analytics.input1 || 0;
+                const metric = analytics.input2 || 0;
+                engagement = views > 0 ? (metric / views) * 100 : 0;
+            }
+            const performance = analytics.performance || '';
+
+            let performanceColor = 'text-white';
+            if (performance === 'Viral') performanceColor = 'text-cyan-400 font-extrabold';
+            else if (performance === 'Bom') performanceColor = 'text-green-400';
+            else if (performance === 'Médio') performanceColor = 'text-yellow-400';
+            else if (performance === 'Ruim') performanceColor = 'text-red-400';
+
+            let inputsHtml = '';
+            if (post.type === 'longas' || post.type === 'curtas') {
+                inputsHtml = `<input type="number" id="post-analytics-input1" placeholder="${calc.p1}" value="${analytics.input1 || ''}" class="w-full bg-gray-700 p-2 rounded-md border border-gray-600">`;
+            } else {
+                inputsHtml = `
+                    <input type="number" id="post-analytics-input1" placeholder="${calc.p1}" value="${analytics.input1 || ''}" class="w-full bg-gray-700 p-2 rounded-md border border-gray-600">
+                    <input type="number" id="post-analytics-input2" placeholder="${calc.p2}" value="${analytics.input2 || ''}" class="w-full bg-gray-700 p-2 rounded-md border border-gray-600">
+                `;
+            }
+
+            content = `
+                <div class="space-y-3">
+                    ${inputsHtml}
+                    <button onclick="calculatePostAnalytics('${currentPostId}')" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-md">Calcular & Salvar</button>
+                    <p class="text-center text-lg mt-2">${calc.label}: <span id="post-analytics-result" class="font-bold text-white">${engagement.toFixed(2)}%</span></p>
+                    <p class="text-center text-lg">Performance: <span id="post-performance-feedback" class="font-bold ${performanceColor}">${performance}</span></p>
+                </div>
+            `;
             block.innerHTML = `<h3 class="text-2xl font-bold text-white mb-4">3. Analytics</h3>${content}`;
         }
         
         function calculatePostAnalytics(postId) {
-            const post = postsData[postId]; if (!post) return;
-            const input1 = parseFloat(document.getElementById('post-analytics-input1').value) || 0;
-            const input2 = parseFloat(document.getElementById('post-analytics-input2').value) || 0;
-            post.analytics = { input1, input2 }; savePosts();
-            const engagement = input1 > 0 ? (input2 / input1) * 100 : 0;
+            const post = postsData[postId];
+            if (!post) return;
+            
+            let engagement = 0;
+            let feedback = '';
+            
+            const input1 = parseFloat(document.getElementById('post-analytics-input1')?.value) || 0;
+            
+            if (post.type === 'longas' || post.type === 'curtas') {
+                engagement = input1;
+                post.analytics = { input1 };
+            } else {
+                const input2 = parseFloat(document.getElementById('post-analytics-input2')?.value) || 0;
+                engagement = input1 > 0 ? (input2 / input1) * 100 : 0;
+                post.analytics = { input1, input2 };
+            }
+
+            switch (post.type) {
+                case 'stories':
+                    if (engagement > 30) feedback = 'Viral';
+                    else if (engagement > 10) feedback = 'Bom';
+                    else if (engagement >= 5) feedback = 'Médio';
+                    else feedback = 'Ruim';
+                    break;
+                case 'cortes': // REELS
+                    if (engagement > 3) feedback = 'Viral';
+                    else if (engagement > 1) feedback = 'Bom';
+                    else if (engagement >= 0.3) feedback = 'Médio';
+                    else feedback = 'Ruim';
+                    break;
+                case 'apresentacoes': // CARROSSEL
+                case 'provas': // FOTOS DO FEED
+                    if (engagement > 24) feedback = 'Viral';
+                    else if (engagement > 8) feedback = 'Bom';
+                    else if (engagement >= 3) feedback = 'Médio';
+                    else feedback = 'Ruim';
+                    break;
+                case 'curtas':
+                    if (engagement > 100) feedback = 'Viral';
+                    else if (engagement > 60) feedback = 'Bom';
+                    else if (engagement >= 40) feedback = 'Médio';
+                    else feedback = 'Ruim';
+                    break;
+                case 'longas':
+                    if (engagement > 100) feedback = 'Viral';
+                    else if (engagement > 50) feedback = 'Bom';
+                    else if (engagement >= 30) feedback = 'Médio';
+                    else feedback = 'Ruim';
+                    break;
+                default:
+                    feedback = 'N/A';
+            }
+
+            post.analytics.performance = feedback;
+            savePosts();
+
+            // Update UI
             document.getElementById('post-analytics-result').textContent = `${engagement.toFixed(2)}%`;
+            const feedbackEl = document.getElementById('post-performance-feedback');
+            feedbackEl.textContent = feedback;
+            
+            feedbackEl.classList.remove('text-cyan-400', 'font-extrabold', 'text-green-400', 'text-yellow-400', 'text-red-400', 'text-white');
+            if (feedback === 'Viral') feedbackEl.classList.add('text-cyan-400', 'font-extrabold');
+            else if (feedback === 'Bom') feedbackEl.classList.add('text-green-400');
+            else if (feedback === 'Médio') feedbackEl.classList.add('text-yellow-400');
+            else if (feedback === 'Ruim') feedbackEl.classList.add('text-red-400');
         }
 
         // --- Handlers de Ações e Formulários ---
@@ -885,4 +987,5 @@
     </script>
 </body>
 </html>
+
 
