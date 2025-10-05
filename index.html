@@ -99,21 +99,21 @@
     <!-- Container da View Principal (Dashboard - Agora focado no Calendário) -->
     <div id="dashboard-view">
         <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-            <header class="text-center mb-10">
-                <h1 class="text-4xl font-bold text-white tracking-tight">Calendário de Conteúdo</h1>
-                <p class="mt-2 text-lg text-cyan-400">Planeje, agende e analise suas postagens em um só lugar.</p>
+            <header class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-white tracking-tight">Calendário de Conteúdo</h1>
+                <p class="mt-3 text-xl text-cyan-400">Planeje, agende e analise suas postagens em um só lugar.</p>
             </header>
 
             <main>
                 <!-- Seção: Calendário de Conteúdo -->
                 <section id="calendario">
                     <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
-                        <div class="flex justify-between items-center mb-4">
-                            <button id="prev-month" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors">&lt;</button>
-                            <h3 id="month-year" class="text-xl font-semibold text-white"></h3>
-                            <button id="next-month" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors">&gt;</button>
+                        <div class="flex justify-between items-center mb-6">
+                            <button id="prev-month" class="px-5 py-3 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors text-lg">&lt;</button>
+                            <h3 id="month-year" class="text-3xl font-semibold text-white"></h3>
+                            <button id="next-month" class="px-5 py-3 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors text-lg">&gt;</button>
                         </div>
-                        <div id="calendar-carousel" class="flex overflow-x-auto space-x-4 pb-4">
+                        <div id="calendar-carousel" class="flex overflow-x-auto space-x-6 pb-4">
                             <!-- Day cards serão gerados aqui -->
                         </div>
                     </div>
@@ -361,7 +361,16 @@
         const platformDataForm = document.getElementById('platform-data-form');
 
         let currentDate = new Date();
-        let postsData = JSON.parse(localStorage.getItem('calendarPosts')) || {};
+        
+        let postsData;
+        try {
+            postsData = JSON.parse(localStorage.getItem('calendarPosts')) || {};
+            if (typeof postsData !== 'object' || postsData === null) postsData = {};
+        } catch (e) {
+            console.error("Could not parse calendarPosts from localStorage, starting fresh.", e);
+            postsData = {};
+        }
+
         let platformData = JSON.parse(localStorage.getItem('platformData')) || {};
         
         let isCommunityPanelCollapsed = JSON.parse(localStorage.getItem('isCommunityPanelCollapsed')) || false;
@@ -431,12 +440,14 @@
                 const dayPostCounts = Object.keys(postsData)
                     .filter(key => key.startsWith(dateStr))
                     .reduce((acc, key) => {
-                        const post = postsData[key];
-                        if (post && post.type) acc[post.type] = (acc[post.type] || 0) + 1;
+                        try {
+                            const post = postsData[key];
+                            if (post && post.type) acc[post.type] = (acc[post.type] || 0) + 1;
+                        } catch(e) { console.error('Error processing post data:', postsData[key]) }
                         return acc;
                     }, {});
 
-                let iconsHtml = '<div class="grid grid-cols-2 gap-x-2 gap-y-2 mt-2 w-full px-2">';
+                let iconsHtml = '<div class="grid grid-cols-2 gap-x-2 gap-y-2 mt-2 w-full px-1">';
                 const postTypeOrder = ['stories', 'cortes', 'curtas', 'apresentacoes', 'longas', 'provas'];
 
                 postTypeOrder.forEach(type => {
@@ -444,31 +455,33 @@
                     const hasPosts = count > 0;
                     const visual = POST_VISUALS[type];
                     let iconContent = '';
+                    
+                    const iconContainer = `<div class="w-8 h-8 flex items-center justify-center">`;
 
                     switch (type) {
                         case 'cortes':
-                            iconContent = `<div class="relative w-5 h-6 fa-fw flex items-center justify-center"><div class="w-3 h-5 ${hasPosts ? 'bg-pink-500' : 'bg-gray-600'} rounded-sm"></div></div>`;
+                            iconContent = `${iconContainer}<div class="w-4 h-6 ${hasPosts ? 'bg-pink-500' : 'bg-gray-600'} rounded-sm"></div></div>`;
                             break;
                         case 'longas':
-                            iconContent = `<div class="relative w-5 h-6 fa-fw flex items-center justify-center"><div class="w-5 h-3 ${hasPosts ? 'bg-red-500' : 'bg-gray-600'} rounded-sm"></div></div>`;
+                            iconContent = `${iconContainer}<div class="w-6 h-4 ${hasPosts ? 'bg-red-500' : 'bg-gray-600'} rounded-sm"></div></div>`;
                             break;
                         case 'curtas':
                             const pinkColor = hasPosts ? 'bg-pink-500' : 'bg-gray-600';
                             const redColor = hasPosts ? 'bg-red-500' : 'bg-gray-500';
-                            iconContent = `<div class="relative w-5 h-6 fa-fw flex items-center justify-center"><div class="absolute w-3 h-5 ${pinkColor} rounded-sm"></div><div class="absolute bottom-0 w-4 h-2 ${redColor} rounded-sm"></div></div>`;
+                            iconContent = `${iconContainer}<div class="relative w-full h-full"><div class="absolute top-1 left-2 w-4 h-6 ${pinkColor} rounded-sm"></div><div class="absolute bottom-1 w-5 h-2.5 ${redColor} rounded-sm"></div></div></div>`;
                             break;
                         default: // stories, apresentacoes, provas
-                            iconContent = `<i class="fas ${visual.icon} fa-fw ${hasPosts ? visual.textColor : 'text-gray-500'} text-xl"></i>`;
+                            iconContent = `${iconContainer}<i class="fas ${visual.icon} fa-fw ${hasPosts ? visual.textColor : 'text-gray-500'} text-2xl"></i></div>`;
                             break;
                     }
                     
-                    iconsHtml += `<div class="flex items-center">${iconContent}<span class="ml-1.5 font-bold text-sm ${hasPosts ? 'text-gray-100' : 'text-gray-500'}">${count}</span></div>`;
+                    iconsHtml += `<div class="flex items-center">${iconContent}<span class="ml-1.5 font-bold text-base ${hasPosts ? 'text-gray-100' : 'text-gray-500'}">${count}</span></div>`;
                 });
                 iconsHtml += '</div>';
 
                 const dayEl = document.createElement('div');
-                dayEl.className = 'flex-shrink-0 w-24 h-44 flex flex-col justify-start items-center p-2 rounded-lg bg-gray-700 cursor-pointer transition-all duration-300 hover:bg-cyan-700 hover:shadow-lg';
-                dayEl.innerHTML = `<div class="text-center mb-1"><span class="font-semibold text-gray-400 text-xs">${dayNames[date.getDay()]}</span><span class="block text-2xl font-bold text-white">${day}</span></div><div class="flex-grow w-full flex items-center">${iconsHtml}</div>`;
+                dayEl.className = 'flex-shrink-0 w-32 h-56 flex flex-col justify-start items-center p-3 rounded-lg bg-gray-700 cursor-pointer transition-all duration-300 hover:bg-cyan-700 hover:shadow-lg';
+                dayEl.innerHTML = `<div class="text-center mb-2"><span class="font-semibold text-gray-400 text-sm">${dayNames[date.getDay()]}</span><span class="block text-4xl font-bold text-white">${day}</span></div><div class="flex-grow w-full flex items-center">${iconsHtml}</div>`;
                 dayEl.dataset.date = dateStr;
                 dayEl.onclick = () => openPeriodConfigModal(dateStr);
                 
@@ -877,3 +890,4 @@
     </script>
 </body>
 </html>
+
