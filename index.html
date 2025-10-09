@@ -396,6 +396,19 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal de Conteúdo Final do Post -->
+    <div id="platform-post-content-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
+        <div class="modal-backdrop fixed inset-0" onclick="closeAllModals()"></div>
+        <div class="bg-gray-800 rounded-lg shadow-xl w-11/12 md:w-1/2 max-w-2xl mx-auto p-6 relative max-h-[90vh] flex flex-col">
+            <h3 id="platform-post-content-title" class="text-2xl font-bold text-white mb-4"></h3>
+            <pre id="platform-post-content-body" class="whitespace-pre-wrap break-words text-gray-300 bg-gray-900 p-4 rounded-md overflow-y-auto flex-grow"></pre>
+            <div class="flex justify-end mt-6 space-x-3">
+                <button type="button" id="copy-post-content-btn" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors">Copiar Conteúdo</button>
+                <button type="button" onclick="closeAllModals()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Fechar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Barra de Navegação Fixa -->
     <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 flex justify-around p-2 z-40">
@@ -436,6 +449,7 @@
         const platformDataModal = document.getElementById('platform-data-modal');
         const platformDetailsModal = document.getElementById('platform-details-modal');
         const platformSelectorModal = document.getElementById('platform-selector-modal');
+        const platformPostContentModal = document.getElementById('platform-post-content-modal');
         
         const ideationForm = document.getElementById('ideation-form');
         const distributionForm = document.getElementById('distribution-form');
@@ -733,7 +747,9 @@
             });
 
             platformsContainer.addEventListener('change', updateCombinedCtaField);
-            updateCombinedCtaField();
+            if (!post.cta) { // Only auto-fill if the cta field is empty
+                updateCombinedCtaField();
+            }
 
             distributionModal.style.display = 'flex';
         }
@@ -792,6 +808,38 @@
 
             platformSelectorModal.style.display = 'flex';
         }
+        
+        function showPlatformPostContentModal(postId, platformName) {
+            const post = postsData[postId];
+            if (!post) return;
+
+            document.getElementById('platform-post-content-title').textContent = `Conteúdo Final para: ${platformName}`;
+            
+            const body = document.getElementById('platform-post-content-body');
+            const platformFunilData = funilData[platformName] || {};
+
+            let finalContent = `${post.titulo || ''}\n`;
+            finalContent += `-----------------------------------------\n`;
+            finalContent += `${post.descricao || ''}\n`;
+            finalContent += `---------------------------------------------\n\n`;
+            
+            if (platformFunilData.ctas && platformFunilData.ctas.trim() !== '') {
+                finalContent += `${platformFunilData.ctas}\n\n`;
+                finalContent += `----------------------------------------------\n\n`;
+            }
+            
+            if (platformFunilData.links && platformFunilData.links.length > 0) {
+                finalContent += `${platformFunilData.links.join('\n')}\n\n`;
+                finalContent += `---------------------------------------------------\n\n`;
+            }
+
+            if (platformFunilData.hashtags && platformFunilData.hashtags.length > 0) {
+                finalContent += `${platformFunilData.hashtags.join(' ')}`;
+            }
+            
+            body.textContent = finalContent.trim();
+            platformPostContentModal.style.display = 'flex';
+        }
 
         function selectPlatformForSlot(stage, index, platformName) {
             funilLayoutData[stage][index] = platformName;
@@ -820,13 +868,14 @@
             distributionModal.style.display = 'none'; platformDataModal.style.display = 'none';
             platformDetailsModal.style.display = 'none';
             platformSelectorModal.style.display = 'none';
+            platformPostContentModal.style.display = 'none';
         }
         
         // --- Lógica de Tags (Hashtags/Links) ---
         function renderTagInput(type, items) {
             const container = document.getElementById(`${type}-tags-container`);
             container.innerHTML = '';
-            items.forEach(item => {
+            (items || []).forEach(item => {
                 const tag = createTagElement(item);
                 container.appendChild(tag);
             });
@@ -859,32 +908,25 @@
             const selectedPlatforms = Array.from(document.querySelectorAll('.platform-checkbox:checked')).map(el => el.value);
             const ctaTextarea = document.getElementById('distribution-post-cta');
 
-            const suggestions = {
-                hashtags: new Set(),
-                links: new Set(),
-                ctas: new Set()
-            };
+            // If no platform is selected, clear the textarea
+            if (selectedPlatforms.length === 0) {
+                ctaTextarea.value = '';
+                return;
+            }
 
-            selectedPlatforms.forEach(platformName => {
-                const data = funilData[platformName];
-                if (data) {
-                    (data.hashtags || []).forEach(h => suggestions.hashtags.add(h));
-                    (data.links || []).forEach(l => suggestions.links.add(l));
-                    (data.ctas || '').split('\n').forEach(c => {
-                        if (c.trim()) suggestions.ctas.add(c.trim());
-                    });
-                }
-            });
-
+            // Use only the first selected platform for pre-filling
+            const firstPlatformName = selectedPlatforms[0];
+            const data = funilData[firstPlatformName] || {};
+            
             let finalText = '';
-            if (suggestions.ctas.size > 0) {
-                finalText += [...suggestions.ctas].join('\n\n');
+            if (data.ctas) {
+                finalText += data.ctas;
             }
-            if (suggestions.links.size > 0) {
-                finalText += (finalText ? '\n\n---\n\n' : '') + [...suggestions.links].join('\n');
+            if (data.links && data.links.length > 0) {
+                finalText += (finalText ? '\n\n---\n\n' : '') + data.links.join('\n');
             }
-            if (suggestions.hashtags.size > 0) {
-                finalText += (finalText ? '\n\n' : '') + [...suggestions.hashtags].join(' ');
+            if (data.hashtags && data.hashtags.length > 0) {
+                finalText += (finalText ? '\n\n' : '') + data.hashtags.join(' ');
             }
             
             ctaTextarea.value = finalText;
@@ -952,13 +994,16 @@
             const block = document.getElementById('distribuicao-block');
             let content;
             if (post.status === 'distribuido') {
+                const platformButtons = (post.plataformas || [])
+                    .map(p => `<button onclick="showPlatformPostContentModal('${currentPostId}', '${p}')" class="bg-gray-700 text-sm hover:bg-cyan-600 px-3 py-1 rounded-full">${p}</button>`)
+                    .join('');
+
                 content = `
-                    <div class="space-y-3 text-gray-300 text-sm break-words">
+                    <div class="space-y-4 text-gray-300 text-sm break-words">
                         <p><strong>Título:</strong> ${post.titulo}</p>
                         <div><strong>Descrição:</strong><div class="mt-1 p-2 bg-gray-900 rounded-md whitespace-pre-wrap">${post.descricao || 'N/A'}</div></div>
-                        <div><strong>CTA, Links & Hashtags:</strong><div class="mt-1 p-2 bg-gray-900 rounded-md whitespace-pre-wrap">${post.cta || 'N/A'}</div></div>
-                        <p><strong>Capa:</strong> ${post.capa ? `<img src="${post.capa}" class="mt-2 rounded-md max-h-24">` : 'N/A'}</p>
-                        <p><strong>Plataformas:</strong> <span class="font-semibold">${post.plataformas?.join(', ') || 'N/A'}</span></p>
+                        <p><strong>Plataformas:</p>
+                        <div class="flex flex-wrap gap-2">${platformButtons}</div>
                     </div>
                 `;
             } else {
@@ -1121,9 +1166,6 @@
             post.capa = document.getElementById('distribution-post-capa').value;
             post.plataformas = selectedPlatforms;
             post.status = 'distribuido';
-            // Deprecated fields, kept for potential future use or data migration
-            post.hashtags = '';
-            post.links = '';
 
             savePosts();
             closeAllModals();
@@ -1309,6 +1351,19 @@
         document.getElementById('add-link-btn').addEventListener('click', () => addTag('link'));
         document.getElementById('new-hashtag-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addTag('hashtag'); } });
         document.getElementById('new-link-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addTag('link'); } });
+        document.getElementById('copy-post-content-btn').addEventListener('click', () => {
+            const content = document.getElementById('platform-post-content-body').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                const btn = document.getElementById('copy-post-content-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copiado!';
+                btn.classList.add('bg-green-500');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('bg-green-500');
+                }, 2000);
+            });
+        });
 
         function renderPeriodConfigModalContent() {
             const periodAmBtn = document.getElementById('config-period-am'); const periodPmBtn = document.getElementById('config-period-pm');
