@@ -16,10 +16,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Estilo base para a fonte Inter */
-        html, body {
-            height: 100%;
-            overflow: hidden; /* Desativa a rolagem da página */
-        }
         body {
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -101,15 +97,15 @@
     </header>
 
     <!-- Container da View Principal (Dashboard - Agora focado no Calendário) -->
-    <div id="dashboard-view" class="h-full flex flex-col">
-        <div class="container mx-auto p-4 sm:p-6 lg:p-8 flex-grow flex flex-col">
-            <main class="flex-grow flex flex-col pt-12">
+    <div id="dashboard-view">
+        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <main class="pt-12">
                 <!-- Seção: Calendário de Conteúdo -->
-                <section id="calendario" class="flex-grow flex flex-col">
-                    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 flex-grow flex flex-col">
+                <section id="calendario">
+                    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
                         <div class="flex justify-between items-center mb-6">
                             <button id="prev-month" class="px-5 py-3 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors text-lg">&lt;</button>
-                            <h3 id="month-year" class="text-3xl font-semibold text-white"></h3>
+                            <h3 id="month-year" class="text-xl sm:text-3xl font-semibold text-white"></h3>
                             <button id="next-month" class="px-5 py-3 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors text-lg">&gt;</button>
                         </div>
                         <div id="calendar-carousel" class="flex overflow-x-auto space-x-6 pb-4">
@@ -121,18 +117,48 @@
         </div>
     </div>
     
-    <!-- Container da View de Trends -->
-    <div id="trends-view" class="hidden">
-         <div class="container mx-auto p-4 sm:p-6 lg:p-8 text-center">
-            <header class="mb-10">
-                <h1 class="text-4xl font-bold text-white tracking-tight">Trends</h1>
-                <p class="mt-2 text-lg text-cyan-400">Fique por dentro do que está em alta.</p>
+    <!-- Container da View de Funil -->
+    <div id="funil-view" class="hidden">
+         <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <header class="text-center mb-10">
+                <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Lousa do Funil</h1>
+                <p class="mt-2 text-base sm:text-lg text-cyan-400">Visualize e monte sua estratégia de marketing.</p>
             </header>
-            <div class="bg-gray-800 p-10 rounded-lg border border-gray-700">
-                <i class="fas fa-chart-line fa-3x mb-4 text-cyan-500"></i>
-                <h2 class="text-2xl text-white">Página em Desenvolvimento</h2>
-                <p class="text-gray-400 mt-2">Em breve, você encontrará aqui insights sobre os formatos e temas mais populares.</p>
-            </div>
+            <main class="flex flex-col items-center">
+                <!-- Atração (Boca do Funil) -->
+                <div class="w-full max-w-4xl">
+                    <h2 class="text-2xl font-bold text-cyan-400 mb-4 text-center">Atração</h2>
+                    <div id="funil-atracao-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
+                        <!-- Slots will be generated here -->
+                    </div>
+                </div>
+    
+                <!-- Arrow Down -->
+                <div class="my-6 text-gray-600">
+                    <i class="fas fa-chevron-down text-4xl"></i>
+                </div>
+    
+                <!-- Relacionamento (Meio do Funil) -->
+                <div class="w-full max-w-3xl">
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">Relacionamento</h2>
+                    <div id="funil-relacionamento-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
+                        <!-- Slots will be generated here -->
+                    </div>
+                </div>
+    
+                <!-- Arrow Down -->
+                <div class="my-6 text-gray-600">
+                    <i class="fas fa-chevron-down text-4xl"></i>
+                </div>
+    
+                <!-- Conversão (Final do Funil) -->
+                <div class="w-full max-w-xl">
+                    <h2 class="text-2xl font-bold text-green-400 mb-4 text-center">Conversão</h2>
+                    <div id="funil-venda-container" class="grid grid-cols-2 md:grid-cols-3 gap-4 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
+                        <!-- Slots will be generated here -->
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
@@ -140,7 +166,7 @@
     <div id="analytics-view" class="hidden">
         <div class="container mx-auto p-4 sm:p-6 lg:p-8">
             <header class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl font-bold text-white tracking-tight">Analytics</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Analytics</h1>
                 <button id="open-platform-data-modal-btn" class="px-3 py-2 bg-gray-700 rounded-md hover:bg-cyan-600 transition-colors"><i class="fas fa-cog"></i></button>
             </header>
             
@@ -274,9 +300,12 @@
                 <input type="hidden" id="distribution-post-id">
                 <div><label for="distribution-post-titulo" class="block text-sm font-medium text-gray-300">Título</label><input type="text" id="distribution-post-titulo" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" required></div>
                 <div><label for="distribution-post-descricao" class="block text-sm font-medium text-gray-300">Descrição</label><textarea id="distribution-post-descricao" rows="3" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></textarea></div>
-                <div><label for="distribution-post-hashtags" class="block text-sm font-medium text-gray-300">Hashtags</label><input type="text" id="distribution-post-hashtags" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></div>
-                <div><label for="distribution-post-cta" class="block text-sm font-medium text-gray-300">CTA (Call to Action)</label><input type="text" id="distribution-post-cta" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></div>
-                <div><label for="distribution-post-links" class="block text-sm font-medium text-gray-300">Links</label><textarea id="distribution-post-links" rows="2" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></textarea></div>
+                
+                <div>
+                    <label for="distribution-post-cta" class="block text-sm font-medium text-gray-300">CTA, Links & Hashtags</label>
+                    <textarea id="distribution-post-cta" rows="6" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></textarea>
+                </div>
+
                 <div><label for="distribution-post-capa" class="block text-sm font-medium text-gray-300">URL da Capa</label><input type="url" id="distribution-post-capa" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></div>
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Plataformas</label>
@@ -299,11 +328,13 @@
                 <div><label for="platform-profile-pic" class="block text-sm font-medium text-gray-300">URL da Foto de Perfil</label><input type="url" id="platform-profile-pic" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600"></div>
                 <div><label for="platform-total-following" class="block text-sm font-medium text-gray-300">Total Seguindo</label><input type="number" id="platform-total-following" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600"></div>
                 <hr class="border-gray-600">
-                <p class="text-sm font-medium text-gray-300">Seguidores / Inscritos por Plataforma</p>
+                <p class="text-sm font-medium text-gray-300">Seguidores / Inscritos (Plataformas Principais)</p>
                 <div id="platform-inputs" class="space-y-2"></div>
                 <hr class="border-gray-600">
-                <p class="text-sm font-medium text-gray-300">Métricas da Comunidade</p>
-                <div><label for="platform-total-members" class="block text-sm text-gray-400">Total de Membros (Grupos, Comunidades, etc.)</label><input type="number" id="platform-total-members" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600"></div>
+                <p class="text-sm font-medium text-gray-300">Membros por Ferramenta</p>
+                <div id="subtool-member-inputs" class="space-y-2"></div>
+                <hr class="border-gray-600">
+                <p class="text-sm font-medium text-gray-300">Métricas da Comunidade (Outros)</p>
                 <div><label for="platform-total-paid-members" class="block text-sm text-gray-400">Total de Membros Pagos</label><input type="number" id="platform-total-paid-members" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600"></div>
             </form>
              <div class="flex justify-end space-x-3 pt-4 mt-2 border-t border-gray-700">
@@ -312,12 +343,65 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal de Detalhes da Plataforma (Funil) -->
+    <div id="platform-details-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
+        <div class="modal-backdrop fixed inset-0" onclick="closeAllModals()"></div>
+        <div class="bg-gray-800 rounded-lg shadow-xl w-11/12 md:w-1/2 lg:w-1/3 max-w-lg mx-auto p-6 relative max-h-[90vh] flex flex-col">
+            <h3 id="platform-details-title" class="text-2xl font-bold text-white mb-4"></h3>
+            <form id="platform-details-form" class="space-y-4 overflow-y-auto pr-2">
+                 <input type="hidden" id="platform-details-name">
+                 
+                 <!-- Hashtags -->
+                 <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Hashtags</label>
+                    <div id="hashtag-tags-container" class="flex flex-wrap gap-2 mb-2 p-2 bg-gray-900/50 rounded-md min-h-[40px]"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="new-hashtag-input" placeholder="Adicionar hashtag..." class="flex-grow bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                        <button type="button" id="add-hashtag-btn" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors">Adicionar</button>
+                    </div>
+                 </div>
+
+                 <!-- CTAs -->
+                 <div><label for="platform-details-ctas" class="block mb-2 text-sm font-medium text-gray-300">CTAs (Call to Actions)</label><textarea id="platform-details-ctas" rows="3" class="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"></textarea></div>
+
+                 <!-- Links -->
+                 <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Links</label>
+                    <div id="link-tags-container" class="flex flex-wrap gap-2 mb-2 p-2 bg-gray-900/50 rounded-md min-h-[40px]"></div>
+                    <div class="flex gap-2">
+                        <input type="url" id="new-link-input" placeholder="https://..." class="flex-grow bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                        <button type="button" id="add-link-btn" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors">Adicionar</button>
+                    </div>
+                 </div>
+
+                 <div class="flex justify-end space-x-3 pt-4 border-t border-gray-600">
+                     <button type="button" onclick="closeAllModals()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Cancelar</button>
+                     <button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors">Salvar</button>
+                 </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal de Seleção de Plataforma (Funil) -->
+    <div id="platform-selector-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
+        <div class="modal-backdrop fixed inset-0" onclick="closeAllModals()"></div>
+        <div class="bg-gray-800 rounded-lg shadow-xl w-11/12 md:w-2/3 max-w-2xl mx-auto p-6 relative">
+            <h3 class="text-2xl font-bold text-white mb-4">Selecione uma Plataforma</h3>
+            <div id="platform-selector-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                <!-- Platform choices will be generated here -->
+            </div>
+            <div class="flex justify-end mt-6">
+                <button type="button" onclick="closeAllModals()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Barra de Navegação Fixa -->
     <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 flex justify-around p-2 z-40">
-        <button data-view="trends-view" class="nav-btn flex flex-col items-center text-gray-400 hover:text-cyan-400 transition-colors w-20">
-            <i class="fas fa-chart-line text-xl"></i>
-            <span class="text-xs mt-1">Trends</span>
+        <button data-view="funil-view" class="nav-btn flex flex-col items-center text-gray-400 hover:text-cyan-400 transition-colors w-20">
+            <i class="fas fa-sitemap text-xl"></i>
+            <span class="text-xs mt-1">Funil</span>
         </button>
         <button data-view="dashboard-view" class="nav-btn flex flex-col items-center text-cyan-400 hover:text-cyan-400 transition-colors w-20"> <!-- Active by default -->
             <i class="fas fa-home text-xl"></i>
@@ -337,7 +421,7 @@
         const dashboardView = document.getElementById('dashboard-view');
         const dayView = document.getElementById('day-view');
         const postView = document.getElementById('post-view');
-        const trendsView = document.getElementById('trends-view');
+        const funilView = document.getElementById('funil-view');
         const analyticsView = document.getElementById('analytics-view');
         const bottomNav = document.getElementById('bottom-nav');
         
@@ -350,10 +434,13 @@
         const ideationModal = document.getElementById('ideation-modal');
         const distributionModal = document.getElementById('distribution-modal');
         const platformDataModal = document.getElementById('platform-data-modal');
+        const platformDetailsModal = document.getElementById('platform-details-modal');
+        const platformSelectorModal = document.getElementById('platform-selector-modal');
         
         const ideationForm = document.getElementById('ideation-form');
         const distributionForm = document.getElementById('distribution-form');
         const platformDataForm = document.getElementById('platform-data-form');
+        const platformDetailsForm = document.getElementById('platform-details-form');
 
         let currentDate = new Date();
         
@@ -367,6 +454,12 @@
         }
 
         let platformData = JSON.parse(localStorage.getItem('platformData')) || {};
+        let funilData = JSON.parse(localStorage.getItem('funilData')) || {};
+        let funilLayoutData = JSON.parse(localStorage.getItem('funilLayoutData')) || {
+            atracao: [],
+            relacionamento: [],
+            venda: []
+        };
         
         let isCommunityPanelCollapsed = JSON.parse(localStorage.getItem('isCommunityPanelCollapsed')) || false;
         const communityToggleBtn = document.getElementById('community-toggle-btn');
@@ -391,10 +484,37 @@
             provas: { label: 'Provas', icon: 'fa-circle', color: 'bg-cyan-500', textColor: 'text-cyan-400', chartColor: 'rgba(34, 211, 238, 0.7)' }
         };
 
-        const PLATFORMS = ['Instagram', 'Facebook', 'TikTok', 'YouTube', 'Twitch', 'LinkedIn', 'Site/Blog'];
+        const PLATFORM_DETAILS = {
+            'Instagram': { icon: 'fa-brands fa-instagram', color: 'text-pink-500', isMain: true },
+            'Canais do Insta': { icon: 'fas fa-bullhorn', color: 'text-pink-300', isMain: false },
+            'DM do Insta': { icon: 'fas fa-paper-plane', color: 'text-pink-400', isMain: false },
+            'Facebook': { icon: 'fa-brands fa-facebook', color: 'text-blue-600', isMain: true },
+            'Messenger': { icon: 'fa-brands fa-facebook-messenger', color: 'text-blue-500', isMain: false },
+            'Páginas do Face': { icon: 'fas fa-file-alt', color: 'text-blue-400', isMain: false },
+            'Grupos do Face': { icon: 'fas fa-users', color: 'text-blue-400', isMain: false },
+            'TikTok': { icon: 'fa-brands fa-tiktok', color: 'text-white', isMain: true },
+            'DM do TikTok': { icon: 'fas fa-paper-plane', color: 'text-gray-300', isMain: false },
+            'YouTube': { icon: 'fa-brands fa-youtube', color: 'text-red-600', isMain: true },
+            'Twitch': { icon: 'fa-brands fa-twitch', color: 'text-purple-600', isMain: true },
+            'LinkedIn': { icon: 'fa-brands fa-linkedin', color: 'text-blue-700', isMain: true },
+            'WhatsApp': { icon: 'fa-brands fa-whatsapp', color: 'text-green-500', isMain: true },
+            'Comunidades do Wpp': { icon: 'fas fa-users', color: 'text-green-400', isMain: false },
+            'Grupos de Wpp': { icon: 'fas fa-user-friends', color: 'text-green-300', isMain: false },
+            'Telegram': { icon: 'fa-brands fa-telegram', color: 'text-sky-500', isMain: true },
+            'Grupos de Tele': { icon: 'fas fa-user-friends', color: 'text-sky-400', isMain: false },
+            'Discord': { icon: 'fa-brands fa-discord', color: 'text-indigo-500', isMain: true },
+            'Servidores do Discord': { icon: 'fas fa-server', color: 'text-indigo-400', isMain: false },
+            'Site/Blog': { icon: 'fas fa-globe', color: 'text-gray-400', isMain: true }
+        };
+        const ALL_PLATFORMS = Object.keys(PLATFORM_DETAILS);
+        const MAIN_PLATFORMS = ALL_PLATFORMS.filter(p => PLATFORM_DETAILS[p].isMain);
+        const SUB_TOOLS = ALL_PLATFORMS.filter(p => !PLATFORM_DETAILS[p].isMain);
 
         function savePosts() { localStorage.setItem('calendarPosts', JSON.stringify(postsData)); }
         function savePlatformData() { localStorage.setItem('platformData', JSON.stringify(platformData)); }
+        function saveFunilData() { localStorage.setItem('funilData', JSON.stringify(funilData)); }
+        function saveFunilLayoutData() { localStorage.setItem('funilLayoutData', JSON.stringify(funilLayoutData)); }
+
 
         function updateBodyPadding() {
             const header = document.getElementById('main-header');
@@ -488,6 +608,47 @@
                 calendarCarouselEl.appendChild(dayEl);
             }
         }
+        
+        function renderFunilPage() {
+            const stages = ['atracao', 'relacionamento', 'venda'];
+
+            stages.forEach(stage => {
+                const container = document.getElementById(`funil-${stage}-container`);
+                if (!container) return;
+                container.innerHTML = '';
+
+                funilLayoutData[stage].forEach((platformName, index) => {
+                    if (platformName) {
+                        const details = PLATFORM_DETAILS[platformName];
+                        
+                        const card = document.createElement('div');
+                        card.className = 'bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col items-center justify-center space-y-3 min-h-[7rem] relative group';
+                        
+                        card.innerHTML = `
+                            <button onclick="removePlatformFromSlot(event, '${stage}', ${index})" class="absolute top-1 right-1 w-6 h-6 bg-red-600/50 hover:bg-red-600 rounded-full text-white text-xs z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">&times;</button>
+                            <div class="w-full h-full flex flex-col items-center justify-center cursor-pointer" onclick="openPlatformDetailsModal('${platformName}')">
+                                <i class="${details.icon} ${details.color} text-4xl"></i>
+                                <span class="text-white font-semibold text-sm text-center mt-2">${platformName}</span>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    } else {
+                        const emptySlot = document.createElement('div');
+                        emptySlot.className = 'bg-gray-800/30 border-2 border-dashed border-gray-600 rounded-lg flex items-center justify-center min-h-[7rem] cursor-pointer hover:bg-gray-700 transition-colors';
+                        emptySlot.onclick = () => openPlatformSelectorModal(stage, index);
+                        emptySlot.innerHTML = `<i class="fas fa-plus text-gray-500 text-3xl"></i>`;
+                        container.appendChild(emptySlot);
+                    }
+                });
+
+                // Botão de adicionar novo slot
+                const addButton = document.createElement('div');
+                addButton.className = 'bg-gray-800/30 border-2 border-dashed border-gray-600 rounded-lg flex items-center justify-center min-h-[7rem] cursor-pointer hover:bg-gray-700 transition-colors';
+                addButton.onclick = () => addFunilSlot(stage);
+                addButton.innerHTML = `<i class="fas fa-plus text-gray-500 text-3xl"></i>`;
+                container.appendChild(addButton);
+            });
+        }
 
         // --- Navegação e Views ---
         function updateNavButtons(activeViewId) {
@@ -500,13 +661,17 @@
         function navigateTo(viewId) {
             mainHeader.classList.remove('hidden');
             dashboardView.classList.add('hidden');
-            trendsView.classList.add('hidden');
+            funilView.classList.add('hidden');
             analyticsView.classList.add('hidden');
             document.getElementById(viewId).classList.remove('hidden');
             updateNavButtons(viewId);
+            
             if (viewId === 'analytics-view') {
                 renderAnalyticsPage();
+            } else if (viewId === 'funil-view') {
+                renderFunilPage();
             }
+
             updateBodyPadding();
         }
 
@@ -521,7 +686,7 @@
         function showDayView(dateStr, period, blocks) {
             currentDayViewDate = dateStr; activeDayViewPeriod = period; activeDayViewBlocks = blocks;
             mainHeader.classList.add('hidden');
-            dashboardView.classList.add('hidden'); trendsView.classList.add('hidden'); analyticsView.classList.add('hidden');
+            dashboardView.classList.add('hidden'); funilView.classList.add('hidden'); analyticsView.classList.add('hidden');
             dayView.classList.remove('hidden'); dayView.classList.add('flex');
             postView.classList.add('hidden'); bottomNav.classList.add('hidden');
             document.getElementById('day-view-date').textContent = new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -532,7 +697,7 @@
         function showPostView(postId) {
             currentPostId = postId; const post = postsData[postId]; if (!post) return;
             mainHeader.classList.add('hidden');
-            dashboardView.classList.add('hidden'); dayView.classList.add('hidden'); trendsView.classList.add('hidden'); analyticsView.classList.add('hidden');
+            dashboardView.classList.add('hidden'); dayView.classList.add('hidden'); funilView.classList.add('hidden'); analyticsView.classList.add('hidden');
             postView.classList.remove('hidden'); postView.classList.add('flex'); bottomNav.classList.add('hidden');
             document.getElementById('post-view-title').textContent = post.titulo || post.tema || 'Novo Post';
             renderPreProducaoBlock(post); renderDistribuicaoBlock(post); renderAnalyticsBlock(post);
@@ -557,36 +722,172 @@
             document.getElementById('distribution-post-id').value = postId; distributionForm.reset();
             document.getElementById('distribution-post-titulo').value = post.titulo || '';
             document.getElementById('distribution-post-descricao').value = post.descricao || '';
-            document.getElementById('distribution-post-hashtags').value = post.hashtags || '';
             document.getElementById('distribution-post-cta').value = post.cta || '';
-            document.getElementById('distribution-post-links').value = post.links || '';
             document.getElementById('distribution-post-capa').value = post.capa || '';
+            
             const platformsContainer = document.getElementById('distribution-platforms');
             platformsContainer.innerHTML = '';
-            PLATFORMS.forEach(platform => {
+            ALL_PLATFORMS.forEach(platform => {
                 const isChecked = post.plataformas?.includes(platform);
-                platformsContainer.innerHTML += `<label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" value="${platform}" ${isChecked ? 'checked' : ''} class="form-checkbox bg-gray-600 border-gray-500 rounded text-cyan-500 focus:ring-cyan-600"><span>${platform}</span></label>`;
+                platformsContainer.innerHTML += `<label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" value="${platform}" ${isChecked ? 'checked' : ''} class="form-checkbox platform-checkbox bg-gray-600 border-gray-500 rounded text-cyan-500 focus:ring-cyan-600"><span>${platform}</span></label>`;
             });
+
+            platformsContainer.addEventListener('change', updateCombinedCtaField);
+            updateCombinedCtaField();
+
             distributionModal.style.display = 'flex';
         }
 
         function openPlatformDataModal() {
             document.getElementById('platform-profile-pic').value = platformData.profilePic || '';
             document.getElementById('platform-total-following').value = platformData.totalFollowing || '';
-            document.getElementById('platform-total-members').value = platformData.totalMembers || '';
             document.getElementById('platform-total-paid-members').value = platformData.totalPaidMembers || '';
             
             const inputsContainer = document.getElementById('platform-inputs');
             inputsContainer.innerHTML = '';
-            PLATFORMS.forEach(p => {
+            MAIN_PLATFORMS.forEach(p => {
                 inputsContainer.innerHTML += `<div class="flex items-center"><label for="platform-${p}" class="w-2/5 text-sm">${p}</label><input type="number" id="platform-${p}" value="${platformData[p] || ''}" class="w-3/5 bg-gray-700 text-white p-1.5 rounded-md border border-gray-600 text-sm"></div>`;
             });
+
+            const subtoolsContainer = document.getElementById('subtool-member-inputs');
+            subtoolsContainer.innerHTML = '';
+            SUB_TOOLS.forEach(p => {
+                subtoolsContainer.innerHTML += `<div class="flex items-center"><label for="subtool-${p}" class="w-2/5 text-sm">${p}</label><input type="number" id="subtool-${p}" value="${platformData.members?.[p] || ''}" class="w-3/5 bg-gray-700 text-white p-1.5 rounded-md border border-gray-600 text-sm"></div>`;
+            });
+
+
             platformDataModal.style.display = 'flex';
+        }
+        
+        function openPlatformDetailsModal(platformName) {
+            document.getElementById('platform-details-title').textContent = `Estratégia para ${platformName}`;
+            document.getElementById('platform-details-name').value = platformName;
+            
+            const data = funilData[platformName] || {};
+
+            renderTagInput('hashtag', data.hashtags || []);
+            renderTagInput('link', data.links || []);
+            
+            document.getElementById('platform-details-ctas').value = data.ctas || '';
+
+            platformDetailsModal.style.display = 'flex';
+        }
+
+        function openPlatformSelectorModal(stage, index) {
+            const grid = document.getElementById('platform-selector-grid');
+            grid.innerHTML = '';
+
+            ALL_PLATFORMS.forEach(platformName => {
+                const details = PLATFORM_DETAILS[platformName];
+                const card = document.createElement('button');
+                card.className = `bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-colors hover:bg-cyan-700`;
+                card.onclick = () => selectPlatformForSlot(stage, index, platformName);
+
+                card.innerHTML = `
+                    <i class="${details.icon} ${details.color} text-3xl"></i>
+                    <span class="text-white font-semibold text-xs text-center">${platformName}</span>
+                `;
+                grid.appendChild(card);
+            });
+
+            platformSelectorModal.style.display = 'flex';
+        }
+
+        function selectPlatformForSlot(stage, index, platformName) {
+            funilLayoutData[stage][index] = platformName;
+            saveFunilLayoutData();
+            renderFunilPage();
+            closeAllModals();
+        }
+
+        function removePlatformFromSlot(event, stage, index) {
+            event.stopPropagation();
+            funilLayoutData[stage].splice(index, 1);
+            saveFunilLayoutData();
+            renderFunilPage();
+        }
+
+        function addFunilSlot(stage) {
+            if (funilLayoutData[stage]) {
+                funilLayoutData[stage].push(null);
+                saveFunilLayoutData();
+                renderFunilPage();
+            }
         }
 
         function closeAllModals() {
             periodConfigModal.style.display = 'none'; ideationModal.style.display = 'none';
             distributionModal.style.display = 'none'; platformDataModal.style.display = 'none';
+            platformDetailsModal.style.display = 'none';
+            platformSelectorModal.style.display = 'none';
+        }
+        
+        // --- Lógica de Tags (Hashtags/Links) ---
+        function renderTagInput(type, items) {
+            const container = document.getElementById(`${type}-tags-container`);
+            container.innerHTML = '';
+            items.forEach(item => {
+                const tag = createTagElement(item);
+                container.appendChild(tag);
+            });
+        }
+
+        function createTagElement(text) {
+            const tag = document.createElement('div');
+            tag.className = 'bg-gray-700 text-sm rounded-full px-3 py-1 flex items-center gap-2';
+            tag.innerHTML = `
+                <span>${text}</span>
+                <button type="button" class="text-gray-400 hover:text-white">&times;</button>
+            `;
+            tag.querySelector('button').onclick = () => tag.remove();
+            return tag;
+        }
+
+        function addTag(type) {
+            const input = document.getElementById(`new-${type}-input`);
+            const container = document.getElementById(`${type}-tags-container`);
+            const value = input.value.trim();
+            if (value) {
+                const tag = createTagElement(value);
+                container.appendChild(tag);
+                input.value = '';
+            }
+        }
+
+        // --- Sugestões no Modal de Distribuição ---
+        function updateCombinedCtaField() {
+            const selectedPlatforms = Array.from(document.querySelectorAll('.platform-checkbox:checked')).map(el => el.value);
+            const ctaTextarea = document.getElementById('distribution-post-cta');
+
+            const suggestions = {
+                hashtags: new Set(),
+                links: new Set(),
+                ctas: new Set()
+            };
+
+            selectedPlatforms.forEach(platformName => {
+                const data = funilData[platformName];
+                if (data) {
+                    (data.hashtags || []).forEach(h => suggestions.hashtags.add(h));
+                    (data.links || []).forEach(l => suggestions.links.add(l));
+                    (data.ctas || '').split('\n').forEach(c => {
+                        if (c.trim()) suggestions.ctas.add(c.trim());
+                    });
+                }
+            });
+
+            let finalText = '';
+            if (suggestions.ctas.size > 0) {
+                finalText += [...suggestions.ctas].join('\n\n');
+            }
+            if (suggestions.links.size > 0) {
+                finalText += (finalText ? '\n\n---\n\n' : '') + [...suggestions.links].join('\n');
+            }
+            if (suggestions.hashtags.size > 0) {
+                finalText += (finalText ? '\n\n' : '') + [...suggestions.hashtags].join(' ');
+            }
+            
+            ctaTextarea.value = finalText;
         }
 
         // --- Renderização de Blocos e Conteúdo ---
@@ -644,13 +945,25 @@
         
         function renderPreProducaoBlock(post) {
             const block = document.getElementById('pre-producao-block'), v = POST_VISUALS[post.type];
-            block.innerHTML = `<h3 class="text-2xl font-bold text-white mb-4">1. Pré-produção</h3><div class="flex-grow space-y-4 text-gray-300"><p><strong>Tipo:</strong> <span class="px-2 py-1 ${v.color} text-white text-xs rounded-full">${POST_VISUALS[post.type]?.label || post.type}</span></p><p><strong>Tema:</strong> ${post.tema || 'Não definido'}</p><p><strong>Formato:</strong> ${post.formato || 'Não definido'}</p><div><strong>Roteiro/Ideia:</strong><div class="mt-1 p-2 bg-gray-900 rounded-md text-sm whitespace-pre-wrap">${post.roteiro || 'Não definido'}</div></div></div><div class="flex space-x-2 mt-6"><button onclick="handleDeletePost('${currentPostId}')" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 w-1/2">Deletar</button><button onclick="openDistributionModal('${currentPostId}')" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 w-1/2">Distribuir</button></div>`;
+            block.innerHTML = `<h3 class="text-2xl font-bold text-white mb-4">1. Pré-produção</h3><div class="flex-grow space-y-4 text-gray-300"><p><strong>Tipo:</strong> <span class="px-2 py-1 ${v.color} text-white text-xs rounded-full">${POST_VISUALS[post.type]?.label || post.type}</span></p><p class="break-words"><strong>Tema:</strong> ${post.tema || 'Não definido'}</p><p class="break-words"><strong>Formato:</strong> ${post.formato || 'Não definido'}</p><div><strong>Roteiro/Ideia:</strong><div class="mt-1 p-2 bg-gray-900 rounded-md text-sm whitespace-pre-wrap break-words">${post.roteiro || 'Não definido'}</div></div></div><div class="flex space-x-2 mt-6"><button onclick="handleDeletePost('${currentPostId}')" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 w-1/2">Deletar</button><button onclick="openDistributionModal('${currentPostId}')" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 w-1/2">Distribuir</button></div>`;
         }
 
         function renderDistribuicaoBlock(post) {
-            const block = document.getElementById('distribuicao-block'); let content;
-            if (post.status === 'distribuido') content = `<div class="space-y-3 text-gray-300 text-sm"><p><strong>Título:</strong> ${post.titulo}</p><div><strong>Descrição:</strong><div class="mt-1 p-2 bg-gray-900 rounded-md whitespace-pre-wrap">${post.descricao || 'N/A'}</div></div><p><strong>Hashtags:</strong> <span class="text-cyan-400">${post.hashtags || 'N/A'}</span></p><p><strong>CTA:</strong> ${post.cta || 'N/A'}</p><p><strong>Links:</strong> <a href="${post.links}" target="_blank" class="text-cyan-400 hover:underline">${post.links || 'N/A'}</a></p><p><strong>Capa:</strong> ${post.capa ? `<img src="${post.capa}" class="mt-2 rounded-md max-h-24">` : 'N/A'}</p><p><strong>Plataformas:</strong> <span class="font-semibold">${post.plataformas?.join(', ') || 'N/A'}</span></p></div>`;
-            else content = `<div class="text-center text-gray-500 flex flex-col items-center justify-center h-full"><i class="fas fa-paper-plane fa-3x mb-4"></i><p>Aguardando distribuição.</p><p class="text-xs">Clique "Distribuir" na pré-produção.</p></div>`;
+            const block = document.getElementById('distribuicao-block');
+            let content;
+            if (post.status === 'distribuido') {
+                content = `
+                    <div class="space-y-3 text-gray-300 text-sm break-words">
+                        <p><strong>Título:</strong> ${post.titulo}</p>
+                        <div><strong>Descrição:</strong><div class="mt-1 p-2 bg-gray-900 rounded-md whitespace-pre-wrap">${post.descricao || 'N/A'}</div></div>
+                        <div><strong>CTA, Links & Hashtags:</strong><div class="mt-1 p-2 bg-gray-900 rounded-md whitespace-pre-wrap">${post.cta || 'N/A'}</div></div>
+                        <p><strong>Capa:</strong> ${post.capa ? `<img src="${post.capa}" class="mt-2 rounded-md max-h-24">` : 'N/A'}</p>
+                        <p><strong>Plataformas:</strong> <span class="font-semibold">${post.plataformas?.join(', ') || 'N/A'}</span></p>
+                    </div>
+                `;
+            } else {
+                content = `<div class="text-center text-gray-500 flex flex-col items-center justify-center h-full"><i class="fas fa-paper-plane fa-3x mb-4"></i><p>Aguardando distribuição.</p><p class="text-xs">Clique "Distribuir" na pré-produção.</p></div>`;
+            }
             block.innerHTML = `<h3 class="text-2xl font-bold text-white mb-4">2. Distribuição</h3>${content}`;
         }
 
@@ -795,30 +1108,69 @@
         });
 
         distributionForm.addEventListener('submit', (e) => {
-            e.preventDefault(); const postId = document.getElementById('distribution-post-id').value;
-            const post = postsData[postId]; if (!post) return;
-            const selectedPlatforms = Array.from(document.querySelectorAll('#distribution-platforms input:checked')).map(el => el.value);
-            post.titulo = document.getElementById('distribution-post-titulo').value; post.descricao = document.getElementById('distribution-post-descricao').value;
-            post.hashtags = document.getElementById('distribution-post-hashtags').value; post.cta = document.getElementById('distribution-post-cta').value;
-            post.links = document.getElementById('distribution-post-links').value; post.capa = document.getElementById('distribution-post-capa').value;
-            post.plataformas = selectedPlatforms; post.status = 'distribuido';
-            savePosts(); closeAllModals(); showPostView(postId);
+            e.preventDefault();
+            const postId = document.getElementById('distribution-post-id').value;
+            const post = postsData[postId];
+            if (!post) return;
+            
+            const selectedPlatforms = Array.from(document.querySelectorAll('.platform-checkbox:checked')).map(el => el.value);
+
+            post.titulo = document.getElementById('distribution-post-titulo').value;
+            post.descricao = document.getElementById('distribution-post-descricao').value;
+            post.cta = document.getElementById('distribution-post-cta').value;
+            post.capa = document.getElementById('distribution-post-capa').value;
+            post.plataformas = selectedPlatforms;
+            post.status = 'distribuido';
+            // Deprecated fields, kept for potential future use or data migration
+            post.hashtags = '';
+            post.links = '';
+
+            savePosts();
+            closeAllModals();
+            showPostView(postId);
         });
 
         platformDataForm.addEventListener('submit', (e) => {
             e.preventDefault();
             platformData.profilePic = document.getElementById('platform-profile-pic').value;
             platformData.totalFollowing = parseInt(document.getElementById('platform-total-following').value) || 0;
-            platformData.totalMembers = parseInt(document.getElementById('platform-total-members').value) || 0;
             platformData.totalPaidMembers = parseInt(document.getElementById('platform-total-paid-members').value) || 0;
-            PLATFORMS.forEach(p => {
+            
+            MAIN_PLATFORMS.forEach(p => {
                 const val = parseInt(document.getElementById(`platform-${p}`).value) || 0;
                 if (val > 0) platformData[p] = val; else delete platformData[p];
             });
+
+            platformData.members = {};
+            SUB_TOOLS.forEach(p => {
+                const val = parseInt(document.getElementById(`subtool-${p}`).value) || 0;
+                if (val > 0) platformData.members[p] = val;
+            });
+
             savePlatformData();
             closeAllModals();
             renderFixedHeader();
-            renderAnalyticsPage();
+            if (document.getElementById('analytics-view').classList.contains('hidden') === false) {
+                renderAnalyticsPage();
+            }
+        });
+        
+        platformDetailsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const platformName = document.getElementById('platform-details-name').value;
+            if (!funilData[platformName]) {
+                funilData[platformName] = {};
+            }
+
+            const hashtags = Array.from(document.querySelectorAll('#hashtag-tags-container span')).map(span => span.textContent);
+            const links = Array.from(document.querySelectorAll('#link-tags-container span')).map(span => span.textContent);
+
+            funilData[platformName].hashtags = hashtags;
+            funilData[platformName].links = links;
+            funilData[platformName].ctas = document.getElementById('platform-details-ctas').value;
+            
+            saveFunilData();
+            closeAllModals();
         });
 
         // --- Lógica de Analytics Page ---
@@ -844,11 +1196,11 @@
         function renderFixedHeader() {
             document.getElementById('analytics-profile-pic').src = platformData.profilePic || 'https://placehold.co/80x80/1a202c/718096?text=Perfil';
             document.getElementById('analytics-total-posts').textContent = Object.keys(postsData).length;
-            const totalFollowers = PLATFORMS.reduce((sum, p) => sum + (platformData[p] || 0), 0);
+            const totalFollowers = MAIN_PLATFORMS.reduce((sum, p) => sum + (platformData[p] || 0), 0);
             document.getElementById('analytics-total-followers').textContent = totalFollowers.toLocaleString('pt-BR');
             document.getElementById('analytics-total-following').textContent = (platformData.totalFollowing || 0).toLocaleString('pt-BR');
             
-            const totalMembers = platformData.totalMembers || 0;
+            const totalMembers = Object.values(platformData.members || {}).reduce((sum, count) => sum + count, 0);
             const totalPaidMembers = platformData.totalPaidMembers || 0;
             const conversionRate = totalFollowers > 0 ? (totalMembers / totalFollowers) * 100 : 0;
             document.getElementById('analytics-total-members').textContent = totalMembers.toLocaleString('pt-BR');
@@ -865,15 +1217,15 @@
 
             // Rankings
             const rankedByPerf = [...filteredPosts].sort(([, a], [, b]) => {
-                const engB = b.analytics.input1 > 0 ? (b.analytics.input2 / b.analytics.input1) : 0;
-                const engA = a.analytics.input1 > 0 ? (a.analytics.input2 / a.analytics.input1) : 0;
+                const engB = b.analytics.input1 > 0 ? (b.analytics.input2 / b.analytics.input1) * 100 : 0;
+                const engA = a.analytics.input1 > 0 ? (a.analytics.input2 / a.analytics.input1) * 100 : 0;
                 return engB - engA;
             }).slice(0, 5);
             
             const rankedByViews = [...filteredPosts].sort(([, a], [, b]) => (b.analytics.input1 || 0) - (a.analytics.input1 || 0)).slice(0, 5);
             
-            document.getElementById('ranking-performance').innerHTML = rankedByPerf.length ? rankedByPerf.map(([, p]) => `<div class="text-sm p-2 bg-gray-700/50 rounded-md"><strong>${p.titulo || p.tema}</strong><span class="float-right font-bold text-cyan-400">${(p.analytics.input1 > 0 ? (p.analytics.input2 / p.analytics.input1) * 100 : 0).toFixed(2)}%</span></div>`).join('') : '<p class="text-sm text-gray-500 text-center">Sem dados no período.</p>';
-            document.getElementById('ranking-views').innerHTML = rankedByViews.length ? rankedByViews.map(([, p]) => `<div class="text-sm p-2 bg-gray-700/50 rounded-md"><strong>${p.titulo || p.tema}</strong><span class="float-right font-bold text-cyan-400">${(p.analytics.input1 || 0).toLocaleString('pt-BR')}</span></div>`).join('') : '<p class="text-sm text-gray-500 text-center">Sem dados no período.</p>';
+            document.getElementById('ranking-performance').innerHTML = rankedByPerf.length ? rankedByPerf.map(([, p]) => `<div class="flex justify-between items-center text-sm p-2 bg-gray-700/50 rounded-md"><strong class="truncate pr-2">${p.titulo || p.tema}</strong><span class="flex-shrink-0 font-bold text-cyan-400">${(p.analytics.input1 > 0 ? (p.analytics.input2 / p.analytics.input1) * 100 : 0).toFixed(2)}%</span></div>`).join('') : '<p class="text-sm text-gray-500 text-center">Sem dados no período.</p>';
+            document.getElementById('ranking-views').innerHTML = rankedByViews.length ? rankedByViews.map(([, p]) => `<div class="flex justify-between items-center text-sm p-2 bg-gray-700/50 rounded-md"><strong class="truncate pr-2">${p.titulo || p.tema}</strong><span class="flex-shrink-0 font-bold text-cyan-400">${(p.analytics.input1 || 0).toLocaleString('pt-BR')}</span></div>`).join('') : '<p class="text-sm text-gray-500 text-center">Sem dados no período.</p>';
 
             // Charts
             renderPerformanceChart(filteredPosts, range);
@@ -952,6 +1304,11 @@
         document.querySelectorAll('.analytics-filter-btn').forEach(btn => btn.onclick = () => renderAnalyticsPage(btn.dataset.range));
         communityToggleBtn.addEventListener('click', toggleCommunityPanel);
         window.addEventListener('resize', updateBodyPadding);
+        
+        document.getElementById('add-hashtag-btn').addEventListener('click', () => addTag('hashtag'));
+        document.getElementById('add-link-btn').addEventListener('click', () => addTag('link'));
+        document.getElementById('new-hashtag-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addTag('hashtag'); } });
+        document.getElementById('new-link-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addTag('link'); } });
 
         function renderPeriodConfigModalContent() {
             const periodAmBtn = document.getElementById('config-period-am'); const periodPmBtn = document.getElementById('config-period-pm');
@@ -987,5 +1344,4 @@
     </script>
 </body>
 </html>
-
 
