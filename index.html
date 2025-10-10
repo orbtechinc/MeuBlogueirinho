@@ -100,7 +100,10 @@
     <!-- Container da View Principal (Dashboard - Agora focado no Calendário) -->
     <div id="dashboard-view">
         <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-            <main class="pt-12">
+            <header class="text-center pt-12 mb-6">
+                <p class="text-xl sm:text-2xl text-cyan-400">Visualize e organize sua produçao de conteudo.</p>
+            </header>
+            <main>
                 <!-- Seção: Calendário de Conteúdo -->
                 <section id="calendario">
                     <div class="bg-gray-800 p-4 sm:p-6 rounded-lg border border-gray-700">
@@ -122,8 +125,7 @@
     <div id="funil-view" class="hidden">
          <div class="container mx-auto p-4 sm:p-6 lg:p-8">
             <header class="text-center mb-10">
-                <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Lousa do Funil</h1>
-                <p class="mt-2 text-base sm:text-lg text-cyan-400">Visualize e monte sua estratégia de marketing.</p>
+                <p class="text-xl sm:text-2xl text-cyan-400">Visualize e monte sua estratégia de marketing.</p>
             </header>
             <main class="flex flex-col items-center">
                 <!-- Atração (Boca do Funil) -->
@@ -389,7 +391,7 @@
         <div class="modal-backdrop fixed inset-0" onclick="closeAllModals()"></div>
         <div class="bg-gray-800 rounded-lg shadow-xl w-11/12 md:w-2/3 max-w-2xl mx-auto p-6 relative">
             <h3 class="text-2xl font-bold text-white mb-4">Selecione uma Plataforma</h3>
-            <div id="platform-selector-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-4">
+            <div id="platform-selector-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
                 <!-- Platform choices will be generated here -->
             </div>
             <div class="flex justify-end mt-6">
@@ -797,12 +799,12 @@
             ALL_PLATFORMS.forEach(platformName => {
                 const details = PLATFORM_DETAILS[platformName];
                 const card = document.createElement('button');
-                card.className = `bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-colors hover:bg-cyan-700`;
+                card.className = `bg-gray-700 p-2 sm:p-4 rounded-lg flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors hover:bg-cyan-700`;
                 card.onclick = () => selectPlatformForSlot(stage, index, platformName);
 
                 card.innerHTML = `
-                    <i class="${details.icon} ${details.color} text-3xl"></i>
-                    <span class="text-white font-semibold text-xs text-center">${platformName}</span>
+                    <i class="${details.icon} ${details.color} text-2xl sm:text-3xl"></i>
+                    <span class="text-white font-semibold text-[10px] sm:text-xs text-center">${platformName}</span>
                 `;
                 grid.appendChild(card);
             });
